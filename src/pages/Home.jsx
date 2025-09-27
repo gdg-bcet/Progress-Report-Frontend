@@ -1,5 +1,5 @@
-import React, { useState, useEffect } from 'react';
-import Content from '@/components/home/Content';
+import React, { useState, useEffect, useCallback } from "react";
+import Content from "@/components/home/Content";
 import {
   Card,
   CardAction,
@@ -8,11 +8,10 @@ import {
   CardFooter,
   CardHeader,
   CardTitle,
-} from '@/components/ui/card';
-import { Spinner } from '@/components/ui/shadcn-io/spinner';
-import { RefreshCw } from 'lucide-react';
-import icon from '/icon.png';
-const API = import.meta.env.VITE_API_URL || 'http://localhost:5000';
+} from "@/components/ui/card";
+import { Spinner } from "@/components/ui/shadcn-io/spinner";
+import { RefreshCw } from "lucide-react";
+import icon from "/icon.png";
 
 function Home() {
   const [state, setState] = useState({
@@ -22,11 +21,22 @@ function Home() {
   });
   const [lastUpdated, setLastUpdated] = useState(new Date());
 
-  const fetchData = async () => {
+  // Dynamic API URL that works for both local and Netlify
+  const getApiUrl = () => {
+    // In production (Netlify), use relative path which gets proxied
+    if (import.meta.env.PROD) {
+      return "/api";
+    }
+    // In development, use the full backend URL
+    return import.meta.env.VITE_API_URL || "http://localhost:3000/api";
+  };
+
+  const fetchData = useCallback(async () => {
     try {
       setState({ data: null, loading: true, error: null });
-      const response = await fetch(`${API}/stats`);
-      if (!response.ok) throw new Error('Network response was not ok');
+      const apiUrl = getApiUrl();
+      const response = await fetch(`${apiUrl}/stats`);
+      if (!response.ok) throw new Error("Network response was not ok");
       const data = await response.json();
       console.log(data);
       setState({ data, loading: false, error: null });
@@ -35,7 +45,7 @@ function Home() {
       setState({ data: null, loading: false, error });
       setLastUpdated(new Date());
     }
-  };
+  }, []);
 
   const getTimeAgo = () => {
     const now = new Date();
@@ -46,7 +56,7 @@ function Home() {
 
   useEffect(() => {
     fetchData();
-  }, []);
+  }, [fetchData]);
 
   useEffect(() => {
     const interval = setInterval(() => {
@@ -84,7 +94,7 @@ function Home() {
             <p className="hidden sm:block ">Refresh</p>
           </div>
           <p className="text-xs text-gray-500 flex">
-            <span className="hidden sm:block me-1">Updated </span>{' '}
+            <span className="hidden sm:block me-1">Updated </span>{" "}
             {getTimeAgo()}
           </p>
         </CardAction>

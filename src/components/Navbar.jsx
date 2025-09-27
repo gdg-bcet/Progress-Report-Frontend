@@ -1,4 +1,4 @@
-import React from 'react';
+import React from "react";
 import {
   Drawer,
   DrawerClose,
@@ -8,9 +8,9 @@ import {
   DrawerHeader,
   DrawerTitle,
   DrawerTrigger,
-} from '@/components/ui/drawer';
-import { Menu } from 'lucide-react';
-import { Link, useLocation } from 'react-router-dom';
+} from "@/components/ui/drawer";
+import { Menu } from "lucide-react";
+import { Link, useLocation } from "react-router-dom";
 
 function Navbar() {
   const location = useLocation();
@@ -24,7 +24,7 @@ function Navbar() {
           <Link
             to="/"
             className={`text-gray-700 hover:text-blue-500 ${
-              location.pathname === '/' ? 'font-bold' : ''
+              location.pathname === "/" ? "font-bold" : ""
             }`}
           >
             Home
@@ -32,7 +32,7 @@ function Navbar() {
           <Link
             to="/progress"
             className={`text-gray-700 hover:text-blue-500 ${
-              location.pathname === '/progress' ? 'font-bold' : ''
+              location.pathname === "/progress" ? "font-bold" : ""
             }`}
           >
             Progress
@@ -40,7 +40,7 @@ function Navbar() {
           <Link
             to="/about"
             className={`text-gray-700 hover:text-blue-500 ${
-              location.pathname === '/about' ? 'font-bold' : ''
+              location.pathname === "/about" ? "font-bold" : ""
             }`}
           >
             About
@@ -59,7 +59,7 @@ function Navbar() {
               <Link
                 to="/"
                 className={`block text-gray-700 hover:text-blue-500 ${
-                  location.pathname === '/' ? 'font-bold' : ''
+                  location.pathname === "/" ? "font-bold" : ""
                 }`}
               >
                 Home
@@ -67,7 +67,7 @@ function Navbar() {
               <Link
                 to="/progress"
                 className={`block text-gray-700 hover:text-blue-500 ${
-                  location.pathname === '/progress' ? 'font-bold' : ''
+                  location.pathname === "/progress" ? "font-bold" : ""
                 }`}
               >
                 Progress
@@ -75,7 +75,7 @@ function Navbar() {
               <Link
                 to="/about"
                 className={`block text-gray-700 hover:text-blue-500 ${
-                  location.pathname === '/about' ? 'font-bold' : ''
+                  location.pathname === "/about" ? "font-bold" : ""
                 }`}
               >
                 About
