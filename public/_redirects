@@ -1,0 +1,2 @@
+# Proxy API requests to the backend server
+/api/*  http://23.136.44.214:30103/api/:splat  200
