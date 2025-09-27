@@ -1,4 +1,5 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
+import Content from '@/components/home/Content';
 import {
   Card,
   CardAction,
@@ -8,12 +9,55 @@ import {
   CardHeader,
   CardTitle,
 } from '@/components/ui/card';
+import { Spinner } from '@/components/ui/shadcn-io/spinner';
 import { RefreshCw } from 'lucide-react';
 import icon from '/icon.png';
+const API = import.meta.env.VITE_API_URL || 'http://localhost:5000';
 
 function Home() {
+  const [state, setState] = useState({
+    data: null,
+    loading: true,
+    error: null,
+  });
+  const [lastUpdated, setLastUpdated] = useState(new Date());
+
+  const fetchData = async () => {
+    try {
+      setState({ data: null, loading: true, error: null });
+      const response = await fetch(`${API}/stats`);
+      if (!response.ok) throw new Error('Network response was not ok');
+      const data = await response.json();
+      console.log(data);
+      setState({ data, loading: false, error: null });
+      setLastUpdated(new Date());
+    } catch (error) {
+      setState({ data: null, loading: false, error });
+      setLastUpdated(new Date());
+    }
+  };
+
+  const getTimeAgo = () => {
+    const now = new Date();
+    const diffMs = now - lastUpdated;
+    const diffMins = Math.floor(diffMs / 60000);
+    return `${diffMins}m ago`;
+  };
+
+  useEffect(() => {
+    fetchData();
+  }, []);
+
+  useEffect(() => {
+    const interval = setInterval(() => {
+      // Force re-render to update time ago
+      setLastUpdated(new Date(lastUpdated));
+    }, 60000); // Update every minute
+    return () => clearInterval(interval);
+  }, [lastUpdated]);
+
   return (
-    <Card className="min-h-[80vh]">
+    <Card>
       <CardHeader>
         <div className="flex items-center gap-2">
           <img
@@ -29,10 +73,10 @@ function Home() {
           </div>
         </div>
         <CardAction className="flex flex-col justify-center items-center gap-1">
-          <div className="flex items-center gap-2 bg-gray-100 rounded-full px-1 sm:px-2 py-1">
+          <div className="flex items-center gap-2 bg-neutral-50 rounded-full px-1 sm:px-2 py-1">
             <button
               className="ml-auto rounded-full hover:bg-blue-500/60 transition bg-blue-500  p-2 text-white shadow-lg cursor-pointer"
-              onClick={() => window.location.reload()}
+              onClick={() => fetchData()}
               title="Refresh"
             >
               <RefreshCw className="size-4 sm:size-5 lg:size-6 hover:animate-spin" />
@@ -40,16 +84,17 @@ function Home() {
             <p className="hidden sm:block ">Refresh</p>
           </div>
           <p className="text-xs text-gray-500 flex">
-            <span className="hidden sm:block me-1">Updated </span> 5m ago
+            <span className="hidden sm:block me-1">Updated </span>{' '}
+            {getTimeAgo()}
           </p>
         </CardAction>
       </CardHeader>
-      <CardContent>
-        <p>Card Content</p>
+      <CardContent className="bg-neutral-50 m-4 p-2 min-h-96 rounded-lg">
+        <Content {...state} />
       </CardContent>
-      <CardFooter>
+      {/* <CardFooter>
         <p>Card Footer</p>
-      </CardFooter>
+      </CardFooter> */}
     </Card>
   );
 }
