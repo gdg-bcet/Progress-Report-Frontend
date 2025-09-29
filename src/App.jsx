@@ -7,17 +7,13 @@ import Navbar from './components/Navbar';
 
 function App() {
   return (
-    <div className="App max-w-4xl mx-auto p-2 sm:p-4">
+    <div className="App max-w-5xl mx-auto p-2 sm:p-4">
       <Router>
         <Navbar />
         <Routes>
           <Route path="/" element={<Home />} />
-          <Route path="/profile" element={<Profile />} />
-<<<<<<< HEAD
           <Route path="/profile/:discordId" element={<Profile />} />
-=======
           <Route path="/progress" element={<Progress />} />
->>>>>>> 04c89a5 (Progress in progress)
           <Route path="/about" element={<div>About Page</div>} />
         </Routes>
       </Router>

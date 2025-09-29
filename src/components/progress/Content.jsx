@@ -1,4 +1,5 @@
 import React, { useState, useCallback, useMemo } from 'react';
+import { Link } from 'react-router-dom';
 import { Search, Download, ChevronUp, ChevronDown } from 'lucide-react';
 import { Input } from '@/components/ui/input';
 import { Button } from '@/components/ui/button';
@@ -301,14 +302,12 @@ function Content({ state, searchParams, setSearchParams }) {
                           </AvatarFallback>
                         </Avatar>
                         <div>
-                          <a
-                            href={user['Profile URL']}
-                            target="_blank"
-                            rel="noopener noreferrer"
+                          <Link
+                            to={`/profile/${user['Discord ID']}`}
                             className="font-medium hover:text-blue-600 transition-colors"
                           >
                             {user.Name}
-                          </a>
+                          </Link>
                         </div>
                       </div>
                     </TableCell>

@@ -1,18 +1,8 @@
-import {
-  Card,
-  CardAction,
-  CardContent,
-  CardDescription,
-  CardFooter,
-  CardHeader,
-  CardTitle,
-} from "@/components/ui/card";
+import { Link } from 'react-router-dom';
 
-import { TrendingUp } from "lucide-react";
-
-import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
-import { Spinner } from "@/components/ui/shadcn-io/spinner";
-import { AnimatedCircularProgressBar } from "@/components/ui/animated-circular-progress-bar";
+import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
+import { Spinner } from '@/components/ui/shadcn-io/spinner';
+import { AnimatedCircularProgressBar } from '@/components/ui/animated-circular-progress-bar';
 
 function Content({ data, loading, error }) {
   if (loading) {
@@ -62,9 +52,14 @@ function Content({ data, loading, error }) {
             <AvatarFallback>CN</AvatarFallback>
           </Avatar>
           <div className="flex flex-col">
-            <p className="font-medium">{data?.top_performer?.name || "N/A"}</p>
+            <Link
+              to={`/profile/${data?.top_performer?.discord_id}`}
+              className="font-medium hover:text-blue-600"
+            >
+              {data?.top_performer?.name || 'N/A'}
+            </Link>
             <p className="text-sm text-muted-foreground">
-              {data?.top_performer?.badge_count || 0} /{" "}
+              {data?.top_performer?.badge_count || 0} /{' '}
               {data?.total_badges || 0} badges
             </p>
           </div>
@@ -99,12 +94,12 @@ import {
   YAxis,
   Line,
   LineChart,
-} from "recharts";
+} from 'recharts';
 import {
   ChartContainer,
   ChartTooltip,
   ChartTooltipContent,
-} from "@/components/ui/chart";
+} from '@/components/ui/chart';
 
 const CompletionRateChart = ({ data }) => {
   if (!data) return <p>No data available</p>;
@@ -116,8 +111,8 @@ const CompletionRateChart = ({ data }) => {
 
   const chartConfig = {
     count: {
-      label: "Count",
-      color: "var(--google-blue)",
+      label: 'Count',
+      color: 'var(--google-blue)',
     },
   };
 
@@ -162,8 +157,8 @@ const BadgePopularityChart = ({ data }) => {
 
   const chartConfig = {
     count: {
-      label: "Count",
-      color: "var(--google-blue)",
+      label: 'Count',
+      color: 'var(--google-blue)',
     },
   };
 
@@ -180,7 +175,7 @@ const BadgePopularityChart = ({ data }) => {
           tickMargin={10}
           axisLine={false}
           width={100}
-          tickFormatter={(value) => value.slice(0, 30)} // Allow longer names
+          tickFormatter={value => value.slice(0, 30)} // Allow longer names
         />
         <ChartTooltip cursor={false} content={<ChartTooltipContent />} />
         <Bar dataKey="count" fill="var(--color-count)" radius={5} />
@@ -201,8 +196,8 @@ const ProgressTimelineChart = ({ data }) => {
 
   const chartConfig = {
     count: {
-      label: "Count",
-      color: "var(--google-blue)",
+      label: 'Count',
+      color: 'var(--google-blue)',
     },
   };
 
@@ -222,12 +217,12 @@ const ProgressTimelineChart = ({ data }) => {
           tickLine={false}
           axisLine={false}
           tickMargin={8}
-          tickFormatter={(value) => {
+          tickFormatter={value => {
             const d = new Date(value);
-            return d.toLocaleDateString("en-US", {
-              month: "short",
-              day: "numeric",
-              year: "2-digit",
+            return d.toLocaleDateString('en-US', {
+              month: 'short',
+              day: 'numeric',
+              year: '2-digit',
             });
           }}
         />
@@ -242,11 +237,11 @@ const ProgressTimelineChart = ({ data }) => {
           cursor={false}
           content={
             <ChartTooltipContent
-              labelFormatter={(value) =>
-                new Date(value).toLocaleDateString("en-US", {
-                  month: "short",
-                  day: "numeric",
-                  year: "numeric",
+              labelFormatter={value =>
+                new Date(value).toLocaleDateString('en-US', {
+                  month: 'short',
+                  day: 'numeric',
+                  year: 'numeric',
                 })
               }
             />
