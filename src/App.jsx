@@ -2,6 +2,7 @@ import './App.css';
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
 import Home from './pages/Home';
 import Profile from './pages/Profile';
+import Progress from './pages/Progress';
 import Navbar from './components/Navbar';
 
 function App() {
@@ -12,7 +13,11 @@ function App() {
         <Routes>
           <Route path="/" element={<Home />} />
           <Route path="/profile" element={<Profile />} />
+<<<<<<< HEAD
           <Route path="/profile/:discordId" element={<Profile />} />
+=======
+          <Route path="/progress" element={<Progress />} />
+>>>>>>> 04c89a5 (Progress in progress)
           <Route path="/about" element={<div>About Page</div>} />
         </Routes>
       </Router>
