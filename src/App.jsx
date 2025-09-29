@@ -12,6 +12,7 @@ function App() {
         <Routes>
           <Route path="/" element={<Home />} />
           <Route path="/profile" element={<Profile />} />
+          <Route path="/profile/:discordId" element={<Profile />} />
           <Route path="/about" element={<div>About Page</div>} />
         </Routes>
       </Router>
