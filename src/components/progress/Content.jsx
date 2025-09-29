@@ -271,20 +271,20 @@ function Content({ state, searchParams, setSearchParams }) {
                   >
                     <TableCell className="font-medium">
                       <div className="flex items-center gap-2">
-                        {user.Rank > 3 && (
-                          <span className="text-lg font-bold text-gray-700">
-                            {user.Rank}
-                          </span>
-                        )}
-                        {user.Rank <= 3 && (
-                          <span className="text-lg">
-                            {user.Rank === 1
-                              ? '🥇'
-                              : user.Rank === 2
-                              ? '🥈'
-                              : '🥉'}
-                          </span>
-                        )}
+                        <span className="text-lg font-bold text-gray-700">
+                          {user.Rank}
+                        </span>
+                        {searchParams.get('sort_by') === 'badge_count' &&
+                          searchParams.get('sort_order') === 'desc' &&
+                          user.Rank <= 3 && (
+                            <span className="text-lg">
+                              {user.Rank === 1
+                                ? '🥇'
+                                : user.Rank === 2
+                                ? '🥈'
+                                : '🥉'}
+                            </span>
+                          )}
                       </div>
                     </TableCell>
                     <TableCell>
