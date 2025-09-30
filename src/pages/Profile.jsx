@@ -1,4 +1,5 @@
 import React, { useEffect, useState } from 'react';
+import { Link } from 'react-router-dom';
 import { useParams } from 'react-router-dom';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 
@@ -39,6 +40,7 @@ const Profile = () => {
           throw new Error(`Server returned ${response.status}`);
         }
         const data = await response.json();
+        // console.log(data);
 
         // Normalize shape and provide safe defaults
         const badges = Array.isArray(data?.badges) ? data.badges : [];
@@ -50,6 +52,7 @@ const Profile = () => {
         setUserData({
           name: data?.name || data?.displayName || 'Unknown User',
           profile: data?.profile || data?.profileUrl || '',
+          profile_color: data?.profile_color || '#000000',
           badges,
           completion_percentage:
             typeof data?.completion_percentage === 'number'
@@ -89,8 +92,16 @@ const Profile = () => {
         <CardHeader className="flex items-center justify-between space-y-0 pb-2 pt-2">
           <div className="flex items-center gap-4  ">
             <Avatar>
-              <AvatarImage src="/avatar_ex.png" />
-              <AvatarFallback>CN</AvatarFallback>
+              <AvatarFallback
+                className="text-xs text-white"
+                style={{ backgroundColor: userData?.profile_color }}
+              >
+                {userData?.name
+                  .split(' ')
+                  .map(n => n[0])
+                  .join('')
+                  .slice(0, 2)}
+              </AvatarFallback>
             </Avatar>
             <div>
               <CardTitle className="text-xl border-gray-500">
@@ -160,9 +171,14 @@ const Profile = () => {
                             </div>
                             <div className="bg-white text-blue-800 text-base mr-2 flex items-center gap-2">
                               <CheckCircle className="text-green-500 w-4 h-4 flex-shrink-0" />
-                              <h4 className="font-medium text-sm break-words">
+                              <a
+                                href={badge?.url}
+                                target="_blank"
+                                rel="noopener noreferrer"
+                                className="font-medium hover:underline text-sm break-words"
+                              >
                                 {badge?.name ?? 'Unnamed Badge'}
-                              </h4>
+                              </a>
                             </div>
                           </div>
                         );
@@ -189,9 +205,14 @@ const Profile = () => {
               .map((badge, idx) => (
                 <div key={badge?.id ?? idx} className="p-4 border rounded">
                   <div className="flex justify-between items-center">
-                    <h4 className=" font-medium size-0.7">
+                    <a
+                      href={badge?.url}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className=" font-medium hover:underline size-0.7"
+                    >
                       {badge?.name ?? 'Unnamed Badge'}
-                    </h4>
+                    </a>
                     <div>
                       {badge.completed ? (
                         <CheckCircle className="text-green-500 w-5 h-5" />

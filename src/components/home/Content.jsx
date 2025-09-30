@@ -48,8 +48,16 @@ function Content({ data, loading, error }) {
         <h2 className="font-semibold">Top Performer</h2>
         <div className="flex gap-2 items-center px-4">
           <Avatar>
-            <AvatarImage src="/avatar_ex.png" />
-            <AvatarFallback>CN</AvatarFallback>
+            <AvatarFallback
+              className="text-xs text-white"
+              style={{ backgroundColor: data?.top_performer?.profile_color }}
+            >
+              {data?.top_performer?.name
+                .split(' ')
+                .map(n => n[0])
+                .join('')
+                .slice(0, 2)}
+            </AvatarFallback>
           </Avatar>
           <div className="flex flex-col">
             <Link
