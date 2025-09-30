@@ -36,7 +36,7 @@ function Content({ data, loading, error }) {
         />
       </div>
       {/* Average Progress */}
-      <div className="bg-white h-40 rounded-lg shadow-sm flex flex-col gap-4 items-center justify-start pt-6 ">
+      <div className="col-span-2 sm:col-span-1 bg-white h-40 rounded-lg shadow-sm flex flex-col gap-4 items-center justify-start pt-6 ">
         <h2 className="font-semibold">Average Progress</h2>
         <h3 className="scroll-m-20 text-4xl font-semibold tracking-tight">
           {data?.average_badges || 0}

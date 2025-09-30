@@ -1,5 +1,5 @@
-import React, { useState, useEffect, useCallback } from "react";
-import Content from "@/components/home/Content";
+import React, { useState, useEffect, useCallback } from 'react';
+import Content from '@/components/home/Content';
 import {
   Card,
   CardAction,
@@ -8,10 +8,10 @@ import {
   CardFooter,
   CardHeader,
   CardTitle,
-} from "@/components/ui/card";
-import { Spinner } from "@/components/ui/shadcn-io/spinner";
-import { RefreshCw } from "lucide-react";
-import icon from "/icon.png";
+} from '@/components/ui/card';
+import { Spinner } from '@/components/ui/shadcn-io/spinner';
+import { RefreshCw } from 'lucide-react';
+import icon from '/icon.png';
 
 function Home() {
   const [state, setState] = useState({
@@ -25,10 +25,10 @@ function Home() {
   const getApiUrl = () => {
     // In production (Netlify), use relative path which gets proxied
     if (import.meta.env.PROD) {
-      return "/api";
+      return '/api';
     }
     // In development, use the full backend URL
-    return import.meta.env.VITE_API_URL || "http://localhost:3000/api";
+    return import.meta.env.VITE_API_URL || 'http://localhost:3000/api';
   };
 
   const fetchData = useCallback(async () => {
@@ -36,9 +36,9 @@ function Home() {
       setState({ data: null, loading: true, error: null });
       const apiUrl = getApiUrl();
       const response = await fetch(`${apiUrl}/stats`);
-      if (!response.ok) throw new Error("Network response was not ok");
+      if (!response.ok) throw new Error('Network response was not ok');
       const data = await response.json();
-      console.log(data);
+      // console.log(data);
       setState({ data, loading: false, error: null });
       setLastUpdated(new Date());
     } catch (error) {
@@ -94,7 +94,7 @@ function Home() {
             <p className="hidden sm:block ">Refresh</p>
           </div>
           <p className="text-xs text-gray-500 flex">
-            <span className="hidden sm:block me-1">Updated </span>{" "}
+            <span className="hidden sm:block me-1">Updated </span>{' '}
             {getTimeAgo()}
           </p>
         </CardAction>

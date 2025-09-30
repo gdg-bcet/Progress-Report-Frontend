@@ -26,7 +26,7 @@ const Profile = () => {
   useEffect(() => {
     const fetchUserData = async () => {
       const apiUrl = getApiUrl();
-      
+
       if (!discordId) {
         setError('No user id provided in route.');
         setLoading(false);
@@ -158,10 +158,12 @@ const Profile = () => {
                                 </span>
                               )}
                             </div>
-                            <Badge className="bg-white text-blue-800 text-base  mr-2">
-                              <CheckCircle className="text-green-500 w-10 h-10" />
-                              {badge?.name ?? 'Unnamed Badge'}
-                            </Badge>
+                            <div className="bg-white text-blue-800 text-base mr-2 flex items-center gap-2">
+                              <CheckCircle className="text-green-500 w-4 h-4 flex-shrink-0" />
+                              <h4 className="font-medium text-sm break-words">
+                                {badge?.name ?? 'Unnamed Badge'}
+                              </h4>
+                            </div>
                           </div>
                         );
                       })}

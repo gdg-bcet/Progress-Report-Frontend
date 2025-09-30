@@ -89,6 +89,19 @@ function Content({ state, searchParams, setSearchParams }) {
 
   // Debounced search function
 
+  // Debounced search function
+  const debounce = useCallback((func, wait) => {
+    let timeout;
+    return function executedFunction(...args) {
+      const later = () => {
+        clearTimeout(timeout);
+        func(...args);
+      };
+      clearTimeout(timeout);
+      timeout = setTimeout(later, wait);
+    };
+  }, []);
+
   const debouncedSearch = useCallback(
     debounce(term => {
       const newParams = new URLSearchParams(searchParams);
@@ -101,6 +114,7 @@ function Content({ state, searchParams, setSearchParams }) {
     }, 500),
     [searchParams, setSearchParams]
   );
+
   const handleSearchChange = e => {
     const value = e.target.value;
     setSearchTerm(value);
