@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useCallback } from 'react';
+import React, { useState, useEffect, useCallback, useMemo } from 'react';
 import { useSearchParams } from 'react-router-dom';
 import {
   Card,
@@ -35,6 +35,7 @@ function Progress() {
     if (!currentParams.has('sort_order')) {
       currentParams.set('sort_order', 'desc');
     }
+    currentParams.delete('search'); // Remove empty search param if exists
     setSearchParams(currentParams);
   }, []);
   // Dynamic API URL that works for both local and Netlify

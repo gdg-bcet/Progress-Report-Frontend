@@ -40,7 +40,7 @@ function Content({ state, searchParams, setSearchParams }) {
         newParams.delete('search');
       }
       setSearchParams(newParams);
-    }, 300),
+    }, 500),
     [searchParams, setSearchParams]
   );
 
