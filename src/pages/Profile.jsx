@@ -13,15 +13,20 @@ const Profile = () => {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
 
-  const apiUrl = import.meta.env.VITE_API_URL;
+  // Dynamic API URL that works for both local and Netlify
+  const getApiUrl = () => {
+    // In production (Netlify), use relative path which gets proxied
+    if (import.meta.env.PROD) {
+      return '/api';
+    }
+    // In development, use the full backend URL
+    return import.meta.env.VITE_API_URL || 'http://localhost:3000/api';
+  };
 
   useEffect(() => {
     const fetchUserData = async () => {
-      if (!apiUrl) {
-        setError('API base URL is not configured (VITE_API_URL).');
-        setLoading(false);
-        return;
-      }
+      const apiUrl = getApiUrl();
+      
       if (!discordId) {
         setError('No user id provided in route.');
         setLoading(false);
@@ -60,7 +65,7 @@ const Profile = () => {
     };
 
     fetchUserData();
-  }, [apiUrl, discordId]);
+  }, [discordId]);
 
   if (loading) {
     return <div className="text-center mt-10">Loading...</div>;
