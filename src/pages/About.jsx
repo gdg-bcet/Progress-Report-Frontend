@@ -1,4 +1,4 @@
-import React from "react";
+import React from 'react';
 import {
   CheckCircle,
   Award,
@@ -10,156 +10,158 @@ import {
   Linkedin,
   Phone,
   ExternalLink,
-} from "lucide-react";
+} from 'lucide-react';
 import {
   Card,
   CardContent,
   CardHeader,
   CardTitle,
   CardDescription,
-} from "@/components/ui/card";
-import { Button } from "@/components/ui/button";
-import TeamMemberCard from "@/components/TeamMemberCard";
-import icon from "/icon.png";
+} from '@/components/ui/card';
+import { Button } from '@/components/ui/button';
+import TeamMemberCard from '@/components/TeamMemberCard';
+import icon from '/icon.png';
 
 const About = () => {
   // Team data structure
   const leadOrganizer = {
-    name: "Sayan Barma",
-    role: "GDGoC Organizer",
+    name: 'Sayan Barma',
+    role: 'GDGoC Organizer',
     image:
-      "https://res.cloudinary.com/startup-grind/image/upload/c_fill,w_250,h_250,g_center/c_fill,dpr_2.0,f_auto,g_center,q_auto:good/v1/gcs/platform-data-goog/avatars/sayan_barma_l7COUW7.png",
+      'https://res.cloudinary.com/startup-grind/image/upload/c_fill,w_250,h_250,g_center/c_fill,dpr_2.0,f_auto,g_center,q_auto:good/v1/gcs/platform-data-goog/avatars/sayan_barma_l7COUW7.png',
     social: {
-      linkedin: "http://linkedin.com/in/sayan-barma-ab0973289/",
-      github: "https://github.com/N00BSC00B",
-      portfolio: "https://sayan-barma-portfolio.netlify.app/",
+      linkedin: 'http://linkedin.com/in/sayan-barma-ab0973289/',
+      github: 'https://github.com/N00BSC00B',
+      portfolio: 'https://sayan-barma-portfolio.netlify.app/',
     },
   };
 
   const coreTeam = [
     {
-      name: "Arjab Mukherjee",
-      role: "Community Manager",
+      name: 'Arjab Mukherjee',
+      role: 'Community Manager',
       image:
-        "https://res.cloudinary.com/startup-grind/image/upload/c_fill,w_250,h_250,g_center/c_fill,dpr_2.0,f_auto,g_center,q_auto:good/v1/gcs/platform-data-goog/avatars/arnab_mukherjee_xOHzYKw.jpg",
+        'https://res.cloudinary.com/startup-grind/image/upload/c_fill,w_250,h_250,g_center/c_fill,dpr_2.0,f_auto,g_center,q_auto:good/v1/gcs/platform-data-goog/avatars/arnab_mukherjee_xOHzYKw.jpg',
       social: {
-        // linkedin: "https://linkedin.com/in/janesmith",
-        // github: "https://github.com/janesmith",
+        linkedin: 'https://www.linkedin.com/in/0xarnab',
+        github: 'https://github.com/arnab-git-404/',
         // portfolio: "https://janesmith.dev",
       },
     },
     {
-      name: "Sayan Sarkar",
-      role: "Cloud Lead",
+      name: 'Sayan Sarkar',
+      role: 'Cloud Lead',
       image:
-        "https://res.cloudinary.com/startup-grind/image/upload/c_fill,w_250,h_250,g_center/c_fill,dpr_2.0,f_auto,g_center,q_auto:good/v1/gcs/platform-data-goog/avatars/sayan_sarkar_N3ytFve.jpg",
+        'https://res.cloudinary.com/startup-grind/image/upload/c_fill,w_250,h_250,g_center/c_fill,dpr_2.0,f_auto,g_center,q_auto:good/v1/gcs/platform-data-goog/avatars/sayan_sarkar_N3ytFve.jpg',
       social: {
-        // linkedin: "https://linkedin.com/in/mikejohnson",
+        linkedin: 'https://linkedin.com/in/sayan-sarkar-724007306',
+        github: 'https://github.com/Sayan0406',
         // twitter: "https://twitter.com/mikejohnson",
         // portfolio: "https://mikejohnson.dev",
       },
     },
     {
-      name: "Anirban Saha",
-      role: "Web Lead",
+      name: 'Anirban Saha',
+      role: 'Web Lead',
       image:
-        "https://res.cloudinary.com/startup-grind/image/upload/c_fill,w_250,h_250,g_center/c_fill,dpr_2.0,f_auto,g_center,q_auto:good/v1/gcs/platform-data-goog/avatars/anirban_saha_vgGRYsN.jpg",
+        'https://res.cloudinary.com/startup-grind/image/upload/c_fill,w_250,h_250,g_center/c_fill,dpr_2.0,f_auto,g_center,q_auto:good/v1/gcs/platform-data-goog/avatars/anirban_saha_vgGRYsN.jpg',
       social: {
-        linkedin: "https://www.linkedin.com/in/anirban-saha-245640256/",
-        github: "https://github.com/TheFastest599",
-        portfolio: "https://anirban-saha-portfolio.netlify.app/",
+        linkedin: 'https://www.linkedin.com/in/anirban-saha-245640256/',
+        github: 'https://github.com/TheFastest599',
+        portfolio: 'https://anirban-saha-portfolio.netlify.app/',
       },
     },
     {
-      name: "Sanjeevan Nag",
-      role: "Management Lead",
+      name: 'Sanjeevan Nag',
+      role: 'Management Lead',
       image:
-        "https://res.cloudinary.com/startup-grind/image/upload/c_fill,w_250,h_250,g_center/c_fill,dpr_2.0,f_auto,g_center,q_auto:good/v1/gcs/platform-data-goog/avatars/sanjeevan_nag_X3j2N6L.jpg",
+        'https://res.cloudinary.com/startup-grind/image/upload/c_fill,w_250,h_250,g_center/c_fill,dpr_2.0,f_auto,g_center,q_auto:good/v1/gcs/platform-data-goog/avatars/sanjeevan_nag_X3j2N6L.jpg',
       social: {
         // linkedin: "https://linkedin.com/in/davidbrown",
         // github: "https://github.com/davidbrown",
       },
     },
     {
-      name: "Rup Kumar Biswas",
-      role: "Graphics Lead",
+      name: 'Rup Kumar Biswas',
+      role: 'Graphics Lead',
       image:
-        "https://res.cloudinary.com/startup-grind/image/upload/c_fill,w_250,h_250,g_center/c_fill,dpr_2.0,f_auto,g_center,q_auto:good/v1/gcs/platform-data-goog/avatars/rup_kumar_biswas_hnuAsiY.jpg",
+        'https://res.cloudinary.com/startup-grind/image/upload/c_fill,w_250,h_250,g_center/c_fill,dpr_2.0,f_auto,g_center,q_auto:good/v1/gcs/platform-data-goog/avatars/rup_kumar_biswas_hnuAsiY.jpg',
       social: {
-        // linkedin: "https://linkedin.com/in/emilydavis",
-        // twitter: "https://twitter.com/emilydavis",
+        linkedin: 'https://www.linkedin.com/in/rup-kumar-biswas-082452307/',
+        twitter: 'https://github.com/RupB401',
+        portfolio: 'https://rup-kumar-biswas-portfolio.netlify.app/',
       },
     },
     {
-      name: "Priyabrate Dey",
-      role: "Content Lead",
+      name: 'Priyabrate Dey',
+      role: 'Content Lead',
       image:
-        "https://res.cloudinary.com/startup-grind/image/upload/c_fill,w_250,h_250,g_center/c_fill,dpr_2.0,f_auto,g_center,q_auto:good/v1/gcs/platform-data-goog/avatars/priyabrata_dey.jpeg",
+        'https://res.cloudinary.com/startup-grind/image/upload/c_fill,w_250,h_250,g_center/c_fill,dpr_2.0,f_auto,g_center,q_auto:good/v1/gcs/platform-data-goog/avatars/priyabrata_dey.jpeg',
       social: {
-        linkedin: "https://www.linkedin.com/in/priyabrata-dey-6a7930201",
-        github: "https://github.com/subho2112",
+        linkedin: 'https://www.linkedin.com/in/priyabrata-dey-6a7930201',
+        github: 'https://github.com/subho2112',
       },
     },
   ];
 
   const coordinators = [
     {
-      name: "Anand Kumar Jha",
-      role: "AI/ML Co-Lead",
+      name: 'Anand Kumar Jha',
+      role: 'AI/ML Co-Lead',
       image:
-        "https://res.cloudinary.com/startup-grind/image/upload/c_fill,w_250,h_250,g_center/c_fill,dpr_2.0,f_auto,g_center,q_auto:good/v1/gcs/platform-data-goog/avatars/anand_kumar_jha_4CgIKel.jpg",
+        'https://res.cloudinary.com/startup-grind/image/upload/c_fill,w_250,h_250,g_center/c_fill,dpr_2.0,f_auto,g_center,q_auto:good/v1/gcs/platform-data-goog/avatars/anand_kumar_jha_4CgIKel.jpg',
       social: {
-        linkedin: "https://www.linkedin.com/in/anand-kumar-a308bb204/",
-        github: "https://github.com/2006anand",
+        linkedin: 'https://www.linkedin.com/in/anand-kumar-a308bb204/',
+        github: 'https://github.com/2006anand',
       },
     },
     {
-      name: "Om Halder",
-      role: "Web Co-Lead",
+      name: 'Om Halder',
+      role: 'Web Co-Lead',
       image:
-        "https://res.cloudinary.com/startup-grind/image/upload/c_fill,w_250,h_250,g_center/c_fill,dpr_2.0,f_auto,g_center,q_auto:good/v1/gcs/platform-data-goog/avatars/om_halder_Yizjzge.jpg",
+        'https://res.cloudinary.com/startup-grind/image/upload/c_fill,w_250,h_250,g_center/c_fill,dpr_2.0,f_auto,g_center,q_auto:good/v1/gcs/platform-data-goog/avatars/om_halder_Yizjzge.jpg',
       social: {
-        linkedin: "https://www.linkedin.com/in/om-halder-26a92a35a/",
-        github: "https://github.com/om-halder",
-        portfolio: "https://om-halder-portfolio.netlify.app/",
+        linkedin: 'https://www.linkedin.com/in/om-halder-26a92a35a/',
+        github: 'https://github.com/om-halder',
+        portfolio: 'https://om-halder-portfolio.netlify.app/',
       },
     },
     {
-      name: "Sadhna Jha",
-      role: "Management Co-Lead",
+      name: 'Sadhna Jha',
+      role: 'Management Co-Lead',
       image:
-        "https://res.cloudinary.com/startup-grind/image/upload/c_fill,w_250,h_250,g_center/c_fill,dpr_2.0,f_auto,g_center,q_auto:good/v1/gcs/platform-data-goog/avatars/sadhna_jha_rY1tCFG.jpg",
+        'https://res.cloudinary.com/startup-grind/image/upload/c_fill,w_250,h_250,g_center/c_fill,dpr_2.0,f_auto,g_center,q_auto:good/v1/gcs/platform-data-goog/avatars/sadhna_jha_rY1tCFG.jpg',
       social: {
-        linkedin: "https://www.linkedin.com/in/sadhna-jha-aa1ba6292",
-        github: "https://github.com/SadhnaJha",
+        linkedin: 'https://www.linkedin.com/in/sadhna-jha-aa1ba6292',
+        github: 'https://github.com/SadhnaJha',
       },
     },
     {
-      name: "Sayan Pal",
-      role: "Design & Graphics Co-Lead",
+      name: 'Sayan Pal',
+      role: 'Design & Graphics Co-Lead',
       image:
-        "https://res.cloudinary.com/startup-grind/image/upload/c_fill,w_250,h_250,g_center/c_fill,dpr_2.0,f_auto,g_center,q_auto:good/v1/gcs/platform-data-goog/avatars/sayan_pal_tOCbruN.jpg",
+        'https://res.cloudinary.com/startup-grind/image/upload/c_fill,w_250,h_250,g_center/c_fill,dpr_2.0,f_auto,g_center,q_auto:good/v1/gcs/platform-data-goog/avatars/sayan_pal_tOCbruN.jpg',
       social: {
-        linkedin: "https://in.linkedin.com/in/sayan-pal-673b2227a",
-        github: "https://github.com/reddevil212",
-        portfolio: "https://potfolio-sayan.netlify.app/",
+        linkedin: 'https://in.linkedin.com/in/sayan-pal-673b2227a',
+        github: 'https://github.com/reddevil212',
+        portfolio: 'https://potfolio-sayan.netlify.app/',
       },
     },
     {
-      name: "Khushi Singh",
-      role: "Events & Operations Co-Lead",
+      name: 'Khushi Singh',
+      role: 'Events & Operations Co-Lead',
       image:
-        "https://res.cloudinary.com/startup-grind/image/upload/c_fill,w_250,h_250,g_center/c_fill,dpr_2.0,f_auto,g_center,q_auto:good/v1/gcs/platform-data-goog/avatars/khushi_singh_KkeuzJ2.jpg",
+        'https://res.cloudinary.com/startup-grind/image/upload/c_fill,w_250,h_250,g_center/c_fill,dpr_2.0,f_auto,g_center,q_auto:good/v1/gcs/platform-data-goog/avatars/khushi_singh_KkeuzJ2.jpg',
       social: {
-        linkedin: "https://www.linkedin.com/in/khushi-singh-aa932b290",
+        linkedin: 'https://www.linkedin.com/in/khushi-singh-aa932b290',
         // twitter: "https://twitter.com/mariarodriguez",
       },
     },
     {
-      name: "Anwesha Paul",
-      role: "Social Media & Content Co-Lead",
+      name: 'Anwesha Paul',
+      role: 'Social Media & Content Co-Lead',
       image:
-        "https://res.cloudinary.com/startup-grind/image/upload/c_fill,w_250,h_250,g_center/c_fill,dpr_2.0,f_auto,g_center,q_auto:good/v1/gcs/platform-data-goog/avatars/anwesha_paul_hyuD9CM.jpg",
+        'https://res.cloudinary.com/startup-grind/image/upload/c_fill,w_250,h_250,g_center/c_fill,dpr_2.0,f_auto,g_center,q_auto:good/v1/gcs/platform-data-goog/avatars/anwesha_paul_hyuD9CM.jpg',
       social: {
         // linkedin: "https://www.linkedin.com/in/japan-anwesha-paul-1b889b308/",
       },

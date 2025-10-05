@@ -396,7 +396,7 @@ function Content({ state, searchParams, setSearchParams }) {
       )}
 
       {/* Progress Table */}
-      <div className="overflow-x-auto rounded-lg border max-h-[50vh]">
+      <div className="overflow-y-auto  rounded-lg border max-h-[50vh]">
         {state.loading ? (
           <LoadingSkeleton />
         ) : state.error ? (
@@ -472,9 +472,7 @@ function Content({ state, searchParams, setSearchParams }) {
                   >
                     <TableCell className="font-medium text-center">
                       <div className="flex items-center justify-center gap-2">
-                        {searchParams.get('sort_by') === 'badge_count' &&
-                        searchParams.get('sort_order') === 'desc' &&
-                        user.Rank <= 3 ? (
+                        {user.Rank <= 3 ? (
                           // Show only medal emoji for top 3 in default sort
                           <span className="text-2xl">
                             {user.Rank === 1

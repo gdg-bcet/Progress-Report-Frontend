@@ -55,8 +55,10 @@ function Progress() {
       const response = await fetch(
         `${apiUrl}/progress${params ? `?${params}` : ''}`
       );
+
       if (!response.ok) throw new Error('Network response was not ok');
       const data = await response.json();
+
       setState({ data, loading: false, error: null });
       setLastUpdated(new Date());
     } catch (error) {

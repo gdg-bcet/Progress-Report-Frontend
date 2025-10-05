@@ -137,12 +137,14 @@ const CompletionRateChart = ({ data }) => {
           tickMargin={10}
           axisLine={false}
         />
+
         <YAxis
           tickLine={false}
           tickMargin={0}
           tickPadding={0}
           axisLine={false}
           width={15}
+          tickFormatter={value => (value === 0 ? '' : value)}
         />
 
         <ChartTooltip content={<ChartTooltipContent />} />
@@ -175,7 +177,12 @@ const BadgePopularityChart = ({ data }) => {
       <BarChart accessibilityLayer data={chartData} layout="vertical">
         <CartesianGrid vertical={true} />
 
-        <XAxis type="number" dataKey="count" hide />
+        <XAxis
+          type="number"
+          tickLine={false}
+          axisLine={false}
+          dataKey="count"
+        />
         <YAxis
           dataKey="badges"
           type="category"
@@ -260,13 +267,12 @@ const ProgressTimelineChart = ({ data }) => {
           type="natural"
           stroke="var(--color-count)"
           strokeWidth={2}
-          dot={false}
-          // dot={{
-          //   fill: 'var(--color-count)',
-          // }}
-          // activeDot={{
-          //   r: 6,
-          // }}
+          dot={{
+            fill: 'var(--color-count)',
+          }}
+          activeDot={{
+            r: 6,
+          }}
         />
       </LineChart>
     </ChartContainer>
