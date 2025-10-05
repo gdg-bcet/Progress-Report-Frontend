@@ -1,18 +1,14 @@
-import React, { useEffect, useState } from 'react';
+import React from 'react';
 import { Link } from 'react-router-dom';
 import { useParams } from 'react-router-dom';
+import { useQuery } from '@tanstack/react-query';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
-
-import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
-import { Badge } from '@/components/ui/badge';
+import { Avatar, AvatarFallback } from '@/components/ui/avatar';
 import { CheckCircle } from 'lucide-react';
 import { AnimatedCircularProgressBar } from '@/components/ui/animated-circular-progress-bar';
 
 const Profile = () => {
   const { discordId } = useParams();
-  const [userData, setUserData] = useState(null);
-  const [loading, setLoading] = useState(true);
-  const [error, setError] = useState(null);
 
   // Dynamic API URL that works for both local and Netlify
   const getApiUrl = () => {
@@ -24,79 +20,67 @@ const Profile = () => {
     return import.meta.env.VITE_API_URL || 'http://localhost:3000/api';
   };
 
-  useEffect(() => {
-    const fetchUserData = async () => {
+  const {
+    data: rawData,
+    isLoading,
+    error,
+  } = useQuery({
+    queryKey: ['user', discordId],
+    queryFn: async () => {
+      if (!discordId) throw new Error('No user id provided in route.');
       const apiUrl = getApiUrl();
+      const response = await fetch(`${apiUrl}/user/${discordId}`);
+      if (!response.ok) throw new Error(`Server returned ${response.status}`);
+      return response.json();
+    },
+    enabled: !!discordId,
+  });
 
-      if (!discordId) {
-        setError('No user id provided in route.');
-        setLoading(false);
-        return;
-      }
-
-      try {
-        const response = await fetch(`${apiUrl}/user/${discordId}`);
-        if (!response.ok) {
-          throw new Error(`Server returned ${response.status}`);
-        }
-        const data = await response.json();
-        // console.log(data);
-
-        // Normalize shape and provide safe defaults
-        const badges = Array.isArray(data?.badges) ? data.badges : [];
-        const completedCount = badges.filter(b => b && b.completed).length;
-        const computedPercent = Math.round(
-          (completedCount / (badges.length || 1)) * 100
-        );
-
-        setUserData({
-          name: data?.name || data?.displayName || 'Unknown User',
-          profile: data?.profile || data?.profileUrl || '',
-          profile_color: data?.profile_color || '#000000',
-          badges,
-          completion_percentage:
-            typeof data?.completion_percentage === 'number'
-              ? data.completion_percentage
-              : computedPercent,
-        });
-      } catch (err) {
-        console.error('Error fetching user data:', err);
-        setError(err.message || 'Failed to fetch user data');
-      } finally {
-        setLoading(false);
-      }
-    };
-
-    fetchUserData();
-  }, [discordId]);
-
-  if (loading) {
+  if (isLoading) {
     return <div className="text-center mt-10">Loading...</div>;
   }
 
   if (error) {
-    return <div className="text-center mt-10 text-red-500">{error}</div>;
+    return (
+      <div className="text-center mt-10 text-red-500">{error.message}</div>
+    );
   }
 
-  if (!userData) {
+  if (!rawData) {
     return (
       <div className="text-center mt-10 text-red-500">No user data found.</div>
     );
   }
 
-  const badges = Array.isArray(userData.badges) ? userData.badges : [];
+  // Normalize shape and provide safe defaults
+  const badges = Array.isArray(rawData?.badges) ? rawData.badges : [];
+  const completedCount = badges.filter(b => b && b.completed).length;
+  const computedPercent = Math.round(
+    (completedCount / (badges.length || 1)) * 100
+  );
+
+  const userData = {
+    name: rawData?.name || rawData?.displayName || 'Unknown User',
+    profile: rawData?.profile || rawData?.profileUrl || '',
+    profile_color: rawData?.profile_color || '#000000',
+    badges,
+    completion_percentage:
+      typeof rawData?.completion_percentage === 'number'
+        ? rawData.completion_percentage
+        : computedPercent,
+  };
 
   return (
     <div>
       <Card>
         <CardHeader className="flex items-center justify-between space-y-0 pb-2 pt-2">
-          <div className="flex items-center gap-4  ">
+          <div className="flex items-center gap-4">
             <Avatar>
               <AvatarFallback
                 className="text-xs text-white"
-                style={{ backgroundColor: userData?.profile_color }}
+                style={{ backgroundColor: userData.profile_color }}
               >
-                {userData?.name
+                {userData.name
                   .split(' ')
                   .map(n => n[0])
                   .join('')
@@ -121,8 +105,7 @@ const Profile = () => {
           </div>
           <div>
             <h3 className="scroll-m-20 text-2xl font-semibold tracking-tight">
-              {badges.filter(b => b && b.completed).length} / {badges.length}{' '}
-              badges
+              {completedCount} / {badges.length} badges
             </h3>
             <p className="text-muted-foreground text-sm">completed</p>
           </div>
@@ -209,7 +192,7 @@ const Profile = () => {
                       href={badge?.url}
                       target="_blank"
                       rel="noopener noreferrer"
-                      className=" font-medium hover:underline size-0.7"
+                      className="font-medium hover:underline size-0.7"
                     >
                       {badge?.name ?? 'Unnamed Badge'}
                     </a>

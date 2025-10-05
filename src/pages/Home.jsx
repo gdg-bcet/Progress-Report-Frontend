@@ -1,4 +1,5 @@
 import React, { useState, useEffect, useCallback } from 'react';
+import { useQuery, useQueryClient } from '@tanstack/react-query';
 import Content from '@/components/home/Content';
 import {
   Card,
@@ -15,12 +16,10 @@ import { RefreshCw } from 'lucide-react';
 import icon from '/icon.png';
 
 function Home() {
-  const [state, setState] = useState({
-    data: null,
-    loading: true,
-    error: null,
-  });
-  const [lastUpdated, setLastUpdated] = useState(new Date());
+  // const [lastUpdated, setLastUpdated] = useState(new Date());
+  const [currentTime, setCurrentTime] = useState(new Date());
+
+  const queryClient = useQueryClient();
 
   // Dynamic API URL that works for both local and Netlify
   const getApiUrl = () => {
@@ -32,40 +31,35 @@ function Home() {
     return import.meta.env.VITE_API_URL || 'http://localhost:3000/api';
   };
 
-  const fetchData = useCallback(async () => {
-    try {
-      setState({ data: null, loading: true, error: null });
-      const apiUrl = getApiUrl();
+  const apiUrl = getApiUrl();
+  const { data, isLoading, isFetching, error, dataUpdatedAt } = useQuery({
+    queryKey: ['stats'],
+    queryFn: async () => {
       const response = await fetch(`${apiUrl}/stats`);
       if (!response.ok) throw new Error('Network response was not ok');
-      const data = await response.json();
-      // console.log(data);
-      setState({ data, loading: false, error: null });
-      setLastUpdated(new Date());
-    } catch (error) {
-      setState({ data: null, loading: false, error });
-      setLastUpdated(new Date());
-    }
-  }, []);
+
+      return response.json();
+    },
+
+    staleTime: Infinity,
+  });
+
+  const lastUpdated = new Date(dataUpdatedAt || Date.now());
 
   const getTimeAgo = () => {
-    const now = new Date();
-    const diffMs = now - lastUpdated;
-    const diffMins = Math.floor(diffMs / 60000);
+    const diffMs = currentTime - lastUpdated;
+    const diffMins = Math.floor(diffMs / 60000) + 1;
     return `${diffMins}m ago`;
   };
 
   useEffect(() => {
-    fetchData();
-  }, [fetchData]);
-
-  useEffect(() => {
     const interval = setInterval(() => {
-      // Force re-render to update time ago
-      setLastUpdated(new Date(lastUpdated));
+      setCurrentTime(new Date());
     }, 60000); // Update every minute
     return () => clearInterval(interval);
-  }, [lastUpdated]);
+  }, []);
+
+  const loading = isLoading || isFetching;
 
   return (
     <Card>
@@ -87,7 +81,10 @@ function Home() {
           <div className="flex items-center gap-2 bg-neutral-50 rounded-full px-1 sm:px-2 py-1">
             <button
               className="ml-auto rounded-full hover:bg-blue-500/60 transition bg-blue-500  p-2 text-white shadow-lg cursor-pointer"
-              onClick={() => fetchData()}
+              // onClick={() => fetchData()}
+              onClick={() =>
+                queryClient.invalidateQueries({ queryKey: ['stats'] })
+              }
               title="Refresh"
             >
               <RefreshCw className="size-4 sm:size-5 lg:size-6 hover:animate-spin" />
@@ -101,7 +98,7 @@ function Home() {
         </CardAction>
       </CardHeader>
       <CardContent className="bg-neutral-50 m-4 p-2 min-h-96 rounded-lg">
-        <Content {...state} />
+        <Content {...{ data, loading, error }} />
       </CardContent>
       {/* <CardFooter>
         <p>Card Footer</p>

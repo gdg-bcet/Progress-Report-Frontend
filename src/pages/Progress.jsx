@@ -1,6 +1,5 @@
-// src/pages/Progress.jsx
-
-import React, { useState, useEffect, useCallback } from 'react';
+import React, { useState, useEffect } from 'react';
+import { useQuery, useQueryClient } from '@tanstack/react-query';
 import { useSearchParams } from 'react-router-dom';
 import {
   Card,
@@ -11,20 +10,17 @@ import {
   CardTitle,
 } from '@/components/ui/card';
 import Content from '@/components/progress/Content';
+
 import { RefreshCw } from 'lucide-react';
 import icon from '/icon.png';
 
 function Progress() {
-  const [state, setState] = useState({
-    data: null,
-    loading: true,
-    error: null,
-  });
-  const [lastUpdated, setLastUpdated] = useState(new Date());
+  const [currentTime, setCurrentTime] = useState(new Date());
   const [searchParams, setSearchParams] = useSearchParams({
     sort_by: 'badge_count',
     sort_order: 'desc',
   });
+  const queryClient = useQueryClient();
 
   useEffect(() => {
     // Set default parameters in the URL if not present
@@ -37,6 +33,7 @@ function Progress() {
     }
     setSearchParams(currentParams);
   }, []);
+
   // Dynamic API URL that works for both local and Netlify
   const getApiUrl = () => {
     // In production (Netlify), use relative path which gets proxied
@@ -47,49 +44,42 @@ function Progress() {
     return import.meta.env.VITE_API_URL || 'http://localhost:3000/api';
   };
 
-  const fetchData = useCallback(async () => {
-    try {
-      setState(prevState => ({ ...prevState, loading: true }));
-      const apiUrl = getApiUrl();
-      const params = new URLSearchParams(searchParams).toString();
+  const apiUrl = getApiUrl();
+  const { data, isLoading, isFetching, error, dataUpdatedAt } = useQuery({
+    queryKey: ['progress', searchParams.toString()],
+    queryFn: async () => {
+      const params = searchParams.toString();
       const response = await fetch(
         `${apiUrl}/progress${params ? `?${params}` : ''}`
       );
-
       if (!response.ok) throw new Error('Network response was not ok');
-      const data = await response.json();
+      return response.json();
+    },
+    staleTime: Infinity, // Prevent refetching on mount
+  });
 
-      setState({ data, loading: false, error: null });
-      setLastUpdated(new Date());
-    } catch (error) {
-      setState({ data: null, loading: false, error });
-      // Keep lastUpdated from the time of the error attempt
-      setLastUpdated(new Date());
-    }
-  }, [searchParams]);
+  const loading = isLoading || isFetching;
+
+  const lastUpdated = new Date(dataUpdatedAt || Date.now());
 
   const getTimeAgo = () => {
-    const now = new Date();
-    const diffMs = now - lastUpdated;
-    const diffSeconds = Math.round(diffMs / 1000);
-
-    if (diffSeconds < 60) return 'just now';
-    const diffMins = Math.floor(diffSeconds / 60);
+    const diffMs = currentTime - lastUpdated;
+    const diffMins = Math.floor(diffMs / 60000) + 1;
     return `${diffMins}m ago`;
   };
 
   useEffect(() => {
-    fetchData();
-  }, [fetchData]);
-
-  const [, setTick] = useState(0);
-  useEffect(() => {
     const interval = setInterval(() => {
-      // Force a re-render every minute to update the "time ago" text
-      setTick(tick => tick + 1);
-    }, 60000);
+      setCurrentTime(new Date());
+    }, 60000); // Update every minute
     return () => clearInterval(interval);
   }, []);
+
+  const handleRefresh = () => {
+    queryClient.invalidateQueries({
+      queryKey: ['progress', searchParams.toString()],
+    });
+  };
 
   return (
     <Card>
@@ -111,18 +101,18 @@ function Progress() {
           <div className="flex items-center gap-2 bg-neutral-50 rounded-full px-1 sm:px-2 py-1">
             <button
               className="ml-auto rounded-full hover:bg-blue-500/60 transition bg-blue-500 p-2 text-white shadow-lg cursor-pointer disabled:bg-gray-400"
-              onClick={fetchData}
+              onClick={handleRefresh}
               title="Refresh"
-              disabled={state.loading}
+              disabled={loading}
             >
               <RefreshCw
                 className={`size-4 sm:size-5 lg:size-6 ${
-                  state.loading ? 'animate-spin' : 'hover:animate-spin'
+                  loading ? 'animate-spin' : 'hover:animate-spin'
                 }`}
               />
             </button>
             <p className="hidden sm:block">
-              {state.loading ? 'Refreshing...' : 'Refresh'}
+              {loading ? 'Refreshing...' : 'Refresh'}
             </p>
           </div>
           <p className="text-xs text-gray-500 flex">
@@ -133,7 +123,9 @@ function Progress() {
       </CardHeader>
       <CardContent className="min-h-96">
         <Content
-          state={state}
+          data={data}
+          loading={loading}
+          error={error}
           searchParams={searchParams}
           setSearchParams={setSearchParams}
         />

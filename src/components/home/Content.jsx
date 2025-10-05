@@ -2,6 +2,7 @@ import { Link } from 'react-router-dom';
 
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { Spinner } from '@/components/ui/shadcn-io/spinner';
+import { Badge } from '@/components/ui/badge';
 import { AnimatedCircularProgressBar } from '@/components/ui/animated-circular-progress-bar';
 
 function Content({ data, loading, error }) {
@@ -25,15 +26,23 @@ function Content({ data, loading, error }) {
         </h3>
       </div>
       {/* Completion Rate */}
-      <div className="bg-white h-40 rounded-lg shadow-sm flex flex-col gap-4 items-center justify-start pt-6 ">
-        <h2 className="font-semibold">Completion Rate</h2>
+      <div className="bg-white h-40 rounded-lg shadow-sm flex flex-col gap-1 items-center justify-start pt-6 ">
+        <h2 className="font-semibold">Completion %</h2>
         <AnimatedCircularProgressBar
-          className="size-20"
+          className="size-16"
           value={data?.completion_percentage || 0}
           // value={75}
           gaugePrimaryColor="var(--google-blue)"
           gaugeSecondaryColor="rgba(0, 0, 0, 0.1)"
         />
+        <p className=" text-sm">
+          <span className="font-semibold">
+            {data?.tier_emoji} {data?.tier}
+          </span>{' '}
+          <Badge variant="outline">
+            {data?.completed_users}/{data?.tier_target}
+          </Badge>
+        </p>
       </div>
       {/* Average Progress */}
       <div className="col-span-2 sm:col-span-1 bg-white h-40 rounded-lg shadow-sm flex flex-col gap-4 items-center justify-start pt-6 ">
@@ -53,7 +62,7 @@ function Content({ data, loading, error }) {
               style={{ backgroundColor: data?.top_performer?.profile_color }}
             >
               {data?.top_performer?.name
-                .split(' ')
+                ?.split(' ')
                 .map(n => n[0])
                 .join('')
                 .slice(0, 2)}
@@ -181,6 +190,7 @@ const BadgePopularityChart = ({ data }) => {
           type="number"
           tickLine={false}
           axisLine={false}
+          tickFormatter={value => (value === 0 ? '' : value)}
           dataKey="count"
         />
         <YAxis
@@ -246,7 +256,7 @@ const ProgressTimelineChart = ({ data }) => {
           tickMargin={0}
           tickPadding={0}
           axisLine={false}
-          width={10}
+          width={15}
         />
         <ChartTooltip
           cursor={false}

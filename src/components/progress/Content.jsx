@@ -35,7 +35,7 @@ import {
   TableRow,
 } from '@/components/ui/table';
 
-function Content({ state, searchParams, setSearchParams }) {
+function Content({ data, loading, error, searchParams, setSearchParams }) {
   const [searchTerm, setSearchTerm] = useState('');
   const [filterOpen, setFilterOpen] = useState(false);
 
@@ -177,19 +177,19 @@ function Content({ state, searchParams, setSearchParams }) {
   }, [searchParams]);
 
   const exportToCSV = () => {
-    if (!state.data?.users) return;
+    if (!data?.users) return;
 
     const headers = [
       'Rank',
       'Name',
       'Badge Count',
       'Profile URL',
-      ...Object.keys(state.data.users[0]?.badges || {}),
+      ...Object.keys(data.users[0]?.badges || {}),
     ];
 
     const csvContent = [
       headers.join(','),
-      ...state.data.users.map(user =>
+      ...data.users.map(user =>
         [
           user.Rank,
           `"${user.Name}"`,
@@ -228,10 +228,8 @@ function Content({ state, searchParams, setSearchParams }) {
   };
 
   const badgeNames = useMemo(() => {
-    return state.data?.users?.[0]?.badges
-      ? Object.keys(state.data.users[0].badges)
-      : [];
-  }, [state.data]);
+    return data?.users?.[0]?.badges ? Object.keys(data.users[0].badges) : [];
+  }, [data]);
 
   // Loading skeleton component
   const LoadingSkeleton = () => (
@@ -366,7 +364,7 @@ function Content({ state, searchParams, setSearchParams }) {
           onClick={exportToCSV}
           variant="outline"
           className="flex items-center gap-2"
-          disabled={state.loading || !state.data?.users}
+          disabled={loading || !data?.users}
         >
           <Download className="h-4 w-4" />
           <span className="hidden sm:inline">Export to CSV</span>
@@ -388,176 +386,177 @@ function Content({ state, searchParams, setSearchParams }) {
       )}
 
       {/* Results Summary */}
-      {!state.loading && !state.error && state.data && (
+      {!loading && !error && data && (
         <div className="text-sm text-gray-600">
-          Showing {state.data.filtered_users} of {state.data.total_users}{' '}
-          participants
+          Showing {data.filtered_users} of {data.total_users} participants
         </div>
       )}
 
       {/* Progress Table */}
-      <div className="overflow-y-auto  rounded-lg border max-h-[50vh]">
-        {state.loading ? (
+      <div className="overflow-y-auto  rounded-lg border h-[50vh] flex flex-col">
+        {loading ? (
           <LoadingSkeleton />
-        ) : state.error ? (
+        ) : error ? (
           <div className="text-center p-8">
-            <p className="text-red-500">Error: {state.error.message}</p>
+            <p className="text-red-500">Error: {error.message}</p>
           </div>
-        ) : !state.data?.users ? (
+        ) : !data?.users ? (
           <div className="text-center p-8">
             <p className="text-gray-500">No data available</p>
           </div>
         ) : (
-          <Table>
-            <TableHeader>
-              <TableRow className="bg-gray-50">
-                <TableHead
-                  className="cursor-pointer hover:bg-gray-100 transition-colors text-center"
-                  onClick={() => handleSort('rank')}
-                >
-                  <div className="flex items-center gap-1 justify-center">
-                    Rank
-                    {getSortIcon('rank')}
-                  </div>
-                </TableHead>
-                <TableHead
-                  className="cursor-pointer hover:bg-gray-100 transition-colors min-w-[200px]"
-                  onClick={() => handleSort('name')}
-                >
-                  <div className="flex items-center gap-1">
-                    Name
-                    {getSortIcon('name')}
-                  </div>
-                </TableHead>
-                <TableHead
-                  className="cursor-pointer hover:bg-gray-100 transition-colors text-center"
-                  onClick={() => handleSort('badge_count')}
-                >
-                  <div className="flex items-center gap-1 justify-center">
-                    Badge Count
-                    {getSortIcon('badge_count')}
-                  </div>
-                </TableHead>
-                {badgeNames.map(badgeName => (
+          <div className="flex flex-col overflow-hidden">
+            <Table>
+              <TableHeader className="sticky top-0 bg-gray-50 z-10">
+                <TableRow>
                   <TableHead
-                    key={badgeName}
-                    className="text-center min-w-[150px] text-xs"
+                    className="cursor-pointer hover:bg-gray-100 transition-colors text-center"
+                    onClick={() => handleSort('rank')}
                   >
-                    <div className="truncate" title={badgeName}>
-                      {badgeName.length > 20
-                        ? badgeName.slice(0, 20) + '...'
-                        : badgeName}
+                    <div className="flex items-center gap-1 justify-center">
+                      Rank
+                      {getSortIcon('rank')}
                     </div>
                   </TableHead>
-                ))}
-              </TableRow>
-            </TableHeader>
-            <TableBody>
-              {state.data.users.length === 0 ? (
-                <TableRow>
-                  <TableCell
-                    colSpan={3 + badgeNames.length}
-                    className="text-center p-8"
+                  <TableHead
+                    className="cursor-pointer hover:bg-gray-100 transition-colors min-w-[200px]"
+                    onClick={() => handleSort('name')}
                   >
-                    <p className="text-gray-500">
-                      No participants found matching your search.
-                    </p>
-                  </TableCell>
+                    <div className="flex items-center gap-1">
+                      Name
+                      {getSortIcon('name')}
+                    </div>
+                  </TableHead>
+                  <TableHead
+                    className="cursor-pointer hover:bg-gray-100 transition-colors text-center"
+                    onClick={() => handleSort('badge_count')}
+                  >
+                    <div className="flex items-center gap-1 justify-center">
+                      Badge Count
+                      {getSortIcon('badge_count')}
+                    </div>
+                  </TableHead>
+                  {badgeNames.map(badgeName => (
+                    <TableHead
+                      key={badgeName}
+                      className="text-center min-w-[150px] text-xs"
+                    >
+                      <div className="truncate" title={badgeName}>
+                        {badgeName.length > 20
+                          ? badgeName.slice(0, 20) + '...'
+                          : badgeName}
+                      </div>
+                    </TableHead>
+                  ))}
                 </TableRow>
-              ) : (
-                state.data.users.map(user => (
-                  <TableRow
-                    key={user['Discord ID']}
-                    className="hover:bg-gray-50"
-                  >
-                    <TableCell className="font-medium text-center">
-                      <div className="flex items-center justify-center gap-2">
-                        {user.Rank <= 3 ? (
-                          // Show only medal emoji for top 3 in default sort
-                          <span className="text-2xl">
-                            {user.Rank === 1
-                              ? '🥇'
-                              : user.Rank === 2
-                              ? '🥈'
-                              : '🥉'}
-                          </span>
-                        ) : (
-                          // Show rank number for all other cases
-                          <span className="text-lg font-bold text-gray-700">
-                            {user.Rank}
-                          </span>
-                        )}
-                      </div>
+              </TableHeader>
+              <TableBody>
+                {data.users.length === 0 ? (
+                  <TableRow>
+                    <TableCell
+                      colSpan={3 + badgeNames.length}
+                      className="text-center p-8"
+                    >
+                      <p className="text-gray-500">
+                        No participants found matching your search.
+                      </p>
                     </TableCell>
-                    <TableCell>
-                      <div className="flex items-center gap-3">
-                        <Avatar className="h-8 w-8">
-                          <AvatarFallback
-                            className="text-xs text-white"
-                            style={{ backgroundColor: user['Profile Color'] }}
-                          >
-                            {user.Name.split(' ')
-                              .map(n => n[0])
-                              .join('')
-                              .slice(0, 2)}
-                          </AvatarFallback>
-                        </Avatar>
-                        <div>
-                          <Link
-                            to={`/profile/${user['Discord ID']}`}
-                            className="font-medium hover:text-blue-600 transition-colors"
-                          >
-                            {user.Name}
-                          </Link>
-                        </div>
-                      </div>
-                    </TableCell>
-                    <TableCell className="text-center">
-                      <div className="flex flex-col items-center gap-1">
-                        <Badge
-                          variant="secondary"
-                          className="bg-gradient-to-r from-blue-500 to-blue-600 text-white"
-                          style={{
-                            background: `linear-gradient(90deg, var(--google-blue) 0%, var(--google-blue) ${getProgressPercentage(
-                              user['Badge Count'],
-                              state.data.total_badges
-                            )}%, #e5e7eb ${getProgressPercentage(
-                              user['Badge Count'],
-                              state.data.total_badges
-                            )}%, #e5e7eb 100%)`,
-                          }}
-                        >
-                          {user['Badge Count']} / {state.data.total_badges}
-                        </Badge>
-                        <span className="text-xs text-gray-500">
-                          {getProgressPercentage(
-                            user['Badge Count'],
-                            state.data.total_badges
-                          )}
-                          %
-                        </span>
-                      </div>
-                    </TableCell>
-                    {badgeNames.map(badgeName => (
-                      <TableCell key={badgeName} className="text-center">
-                        <div className="flex justify-center">
-                          {user.badges[badgeName] === 'Done' ? (
-                            <div className="w-6 h-6 bg-google-green rounded-full flex items-center justify-center">
-                              <span className="text-white text-xs">✓</span>
-                            </div>
+                  </TableRow>
+                ) : (
+                  data.users.map(user => (
+                    <TableRow
+                      key={user['Discord ID']}
+                      className="hover:bg-gray-50"
+                    >
+                      <TableCell className="font-medium text-center">
+                        <div className="flex items-center justify-center gap-2">
+                          {user.Rank <= 3 ? (
+                            // Show only medal emoji for top 3 in default sort
+                            <span className="text-2xl">
+                              {user.Rank === 1
+                                ? '🥇'
+                                : user.Rank === 2
+                                ? '🥈'
+                                : '🥉'}
+                            </span>
                           ) : (
-                            <div className="w-6 h-6 bg-gray-200 rounded-full flex items-center justify-center">
-                              <span className="text-gray-400 text-xs">○</span>
-                            </div>
+                            // Show rank number for all other cases
+                            <span className="text-lg font-bold text-gray-700">
+                              {user.Rank}
+                            </span>
                           )}
                         </div>
                       </TableCell>
-                    ))}
-                  </TableRow>
-                ))
-              )}
-            </TableBody>
-          </Table>
+                      <TableCell>
+                        <div className="flex items-center gap-3">
+                          <Avatar className="h-8 w-8">
+                            <AvatarFallback
+                              className="text-xs text-white"
+                              style={{ backgroundColor: user['Profile Color'] }}
+                            >
+                              {user.Name.split(' ')
+                                .map(n => n[0])
+                                .join('')
+                                .slice(0, 2)}
+                            </AvatarFallback>
+                          </Avatar>
+                          <div>
+                            <Link
+                              to={`/profile/${user['Discord ID']}`}
+                              className="font-medium hover:text-blue-600 transition-colors"
+                            >
+                              {user.Name}
+                            </Link>
+                          </div>
+                        </div>
+                      </TableCell>
+                      <TableCell className="text-center">
+                        <div className="flex flex-col items-center gap-1">
+                          <Badge
+                            variant="secondary"
+                            className="bg-gradient-to-r from-blue-500 to-blue-600 text-white"
+                            style={{
+                              background: `linear-gradient(90deg, var(--google-blue) 0%, var(--google-blue) ${getProgressPercentage(
+                                user['Badge Count'],
+                                data.total_badges
+                              )}%, #e5e7eb ${getProgressPercentage(
+                                user['Badge Count'],
+                                data.total_badges
+                              )}%, #e5e7eb 100%)`,
+                            }}
+                          >
+                            {user['Badge Count']} / {data.total_badges}
+                          </Badge>
+                          <span className="text-xs text-gray-500">
+                            {getProgressPercentage(
+                              user['Badge Count'],
+                              data.total_badges
+                            )}
+                            %
+                          </span>
+                        </div>
+                      </TableCell>
+                      {badgeNames.map(badgeName => (
+                        <TableCell key={badgeName} className="text-center">
+                          <div className="flex justify-center">
+                            {user.badges[badgeName] === 'Done' ? (
+                              <div className="w-6 h-6 bg-google-green rounded-full flex items-center justify-center">
+                                <span className="text-white text-xs">✓</span>
+                              </div>
+                            ) : (
+                              <div className="w-6 h-6 bg-gray-200 rounded-full flex items-center justify-center">
+                                <span className="text-gray-400 text-xs">○</span>
+                              </div>
+                            )}
+                          </div>
+                        </TableCell>
+                      ))}
+                    </TableRow>
+                  ))
+                )}
+              </TableBody>
+            </Table>
+          </div>
         )}
       </div>
     </div>
