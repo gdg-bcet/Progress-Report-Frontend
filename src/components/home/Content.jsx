@@ -152,7 +152,7 @@ const CompletionRateChart = ({ data }) => {
           tickMargin={0}
           tickPadding={0}
           axisLine={false}
-          width={15}
+          width={20}
           tickFormatter={value => (value === 0 ? '' : value)}
         />
 
